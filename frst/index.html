@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button onclick="openPopup()">Начать</button>
+
+    <div id="overlay" onclick="closePopup()">
+        <div id="popup" onclick="event.stopPropagation();">
+            <h2>Заполните данные</h2>
+            <div class="f_wrap">
+                <div class="flex-container">
+                    <div class="input-field">
+                        <label for="name">Имя:</label>
+                        <input type="text" id="name">
+                    </div>
+                    <div class="input-field">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email">
+                    </div>
+                </div>
+
+                <div class="flex-container">
+                    <div class="input-field">
+                        <label for="phone">Телефон:</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    <div class="input-field">
+                        <label for="city">Город:</label>
+                        <input type="text" id="city">
+                    </div>
+                    <div class="input-field">
+                        <label for="message">Сообщение:</label>
+                        <textarea id="message"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button id="submitBtn" onclick="submitForm()">Отправить</button>
+        </div>
+    </div><br>
+    <div id="output"></div>
+    <script>
+        function openPopup() {
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function submitForm() {
+            closePopup();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const city = document.getElementById('city').value;
+            const message = document.getElementById('message').value;
+
+            const data = {
+                name: name,
+                email: email,
+                phone: phone,
+                city: city,
+                message: message
+            };
+
+            const jsonData = JSON.stringify(data);
+            console.log(jsonData);
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '<h3>Введенные данные:</h3>';
+            
+            for (const key in data) {
+                outputDiv.innerHTML += `<p><strong>${key}:</strong> ${data[key]}</p>`;
+            }
+
+            
+        }
+    </script>
+</body>
+</html>
