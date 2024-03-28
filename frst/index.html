@@ -1,87 +1,156 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Popup Form</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!DOCTYPE html> 
+<html lang="en"> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Определение масштабирования для мобильных устройств -->
+    <title>Popup Form</title> 
+    <style>
+      /* Стили для фона */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%; 
+        height: 100%; 
+        background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный цвет */
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        z-index: 999;
+        display: none; /* Изначально скрыт */
+      }
 
-    <button onclick="openPopup()">Начать</button>
+      /* Стили для попапа */
+      .popup {
+        max-width: 500px;
+        background-color: white; 
+        padding: 20px; 
+        border-radius: 10px; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
+      }
 
-    <div id="overlay" onclick="closePopup()">
-        <div id="popup" onclick="event.stopPropagation();">
-            <h2>Заполните данные</h2>
-            <div class="f_wrap">
-                <div class="flex-container">
-                    <div class="input-field">
-                        <label for="name">Имя:</label>
-                        <input type="text" id="name">
-                    </div>
-                    <div class="input-field">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email">
-                    </div>
-                </div>
+      /* Флексбоксы для полей ввода */
+      .popup input {
+        width: 250px; 
+        margin-bottom: 10px;
+      }
 
-                <div class="flex-container">
-                    <div class="input-field">
-                        <label for="phone">Телефон:</label>
-                        <input type="tel" id="phone">
-                    </div>
-                    <div class="input-field">
-                        <label for="city">Город:</label>
-                        <input type="text" id="city">
-                    </div>
-                    <div class="input-field">
-                        <label for="message">Сообщение:</label>
-                        <textarea id="message"></textarea>
-                    </div>
-                </div>
-            </div>
+      /* Стили для кнопок */
+      .popup button {
+        width: 100%; 
+        padding: 10px; 
+        background-color: #007bff;
+        color: white; 
+        border: none;
+        border-radius: 5px; 
+        cursor: pointer;
+      }
 
-            <button id="submitBtn" onclick="submitForm()">Отправить</button>
+      /* Стили для кнопки "Начать" */
+      #startButton {
+        position: fixed;
+        top: 50%; 
+        left: 50%;
+        transform: translate(-50%, -50%); 
+      }
+      .input_wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      @media (max-width: 500px) {
+        .input_wrapper{
+            flex-direction: column; 
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Кнопка "Начать" -->
+    <button id="startButton">Начать</button> <!-- Кнопка для запуска попапа -->
+
+    <!-- Попап -->
+    <div class="overlay" id="overlay"> <!-- Обертка для попапа -->
+      <div class="popup"> <!-- Попап -->
+        <h2>Введите данные</h2> <!-- Заголовок попапа -->
+        <div class="input_wrapper"> <!-- Обертка для полей ввода -->
+          <div class="frst_col"> <!-- Первая колонка полей ввода -->
+            <input id="nameInput" type="text" placeholder="Имя" /> <!-- Поле ввода имени -->
+            <input id="surnameInput" type="text" placeholder="Фамилия" /> <!-- Поле ввода фамилии -->
+            <input id="emailInput" type="email" placeholder="Email" /> <!-- Поле ввода электронной почты -->
+          </div>
+          <div class="scnd_col"> <!-- Вторая колонка полей ввода -->
+            <input id="phoneInput" type="tel" placeholder="Телефон" /> <!-- Поле ввода телефона -->
+            <input id="cityInput" type="text" placeholder="Город" /> <!-- Поле ввода города -->
+          </div>
         </div>
-    </div><br>
-    <div id="output"></div>
+        <button id="submitButton">Отправить</button> <!-- Кнопка отправки данных -->
+      </div>
+    </div>
+
+    <!-- Результаты на странице -->
+    <div id="results"></div> <!-- Блок для отображения результатов -->
+
     <script>
-        function openPopup() {
-            document.getElementById('overlay').style.display = 'flex';
-        }
+      document.addEventListener("DOMContentLoaded", function () { // Обработчик события загрузки страницы
+        const startButton = document.querySelector("#startButton"); // Выбор кнопки "Начать" 
+        const overlay = document.querySelector("#overlay"); // Выбор попапа 
+        const submitButton = document.querySelector("#submitButton"); // Выбор кнопки "Отправить" 
+        const results = document.querySelector("#results"); // Выбор блока для результатов 
 
-        function closePopup() {
-            document.getElementById('overlay').style.display = 'none';
-        }
+        // Обработчик клика на кнопку "Начать"
+        startButton.addEventListener("click", function () {
+          overlay.style.display = "flex"; // Показываем попап
+        });
 
-        function submitForm() {
-            closePopup();
+        // Обработчик клика на кнопку "Отправить"
+        submitButton.addEventListener("click", function () {
+          // Получаем данные из полей ввода
+          const name = document.querySelector("#nameInput").value;
+          const surname = document.querySelector("#surnameInput").value;
+          const email = document.querySelector("#emailInput").value;
+          const phone = document.querySelector("#phoneInput").value;
+          const city = document.querySelector("#cityInput").value;
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const city = document.getElementById('city').value;
-            const message = document.getElementById('message').value;
+          // Закрываем попап
+          overlay.style.display = "none";
 
-            const data = {
-                name: name,
-                email: email,
-                phone: phone,
-                city: city,
-                message: message
-            };
+          // Отображаем результаты на странице
+          results.innerHTML = `
+      <h3>Введенные данные:</h3>
+      <p>Имя: ${name}</p>
+      <p>Фамилия: ${surname}</p>
+      <p>Email: ${email}</p>
+      <p>Телефон: ${phone}</p>
+      <p>Город: ${city}</p>
+    `;
 
-            const jsonData = JSON.stringify(data);
-            console.log(jsonData);
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = '<h3>Введенные данные:</h3>';
-            
-            for (const key in data) {
-                outputDiv.innerHTML += `<p><strong>${key}:</strong> ${data[key]}</p>`;
-            }
+          // Формируем объект JSON из данных
+          const jsonData = {
+            name: name,
+            surname: surname,
+            email: email,
+            phone: phone,
+            city: city,
+          };
 
-            
-        }
+          // Выводим JSON на странице
+          results.innerHTML += `<h3>Данные в формате JSON:</h3><pre>${JSON.stringify(
+            jsonData,
+            null,
+            2
+          )}</pre>`;
+        });
+
+        // Обработчик клика вне попапа для его закрытия
+        overlay.addEventListener("click", function (event) {
+          if (event.target === overlay) {
+            overlay.style.display = "none";
+          }
+        });
+
+        
+      });
     </script>
-</body>
+  </body>
 </html>
